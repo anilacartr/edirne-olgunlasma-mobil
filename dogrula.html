@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Katılım Belgesi Doğrulama · Edirne Olgunlaşma Enstitüsü</title>
+  <meta name="theme-color" content="#2E0854">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <!--
+    Bu sayfa GİRİŞ GEREKTİRMEZ. Sertifikanın üzerindeki QR kodu okuyan herkes
+    (işveren, kurum, kursiyer) belgenin gerçekliğini buradan doğrular.
+    Yalnızca doğrulama kodu ile sorgulanır; belgede zaten yazan bilgiler dışında
+    hiçbir kişisel veri döndürülmez.
+  -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'self';
+    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+    font-src 'self' data: https://fonts.gstatic.com;
+    img-src 'self' data:;
+    connect-src 'self' https://script.google.com https://script.googleusercontent.com;
+    frame-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none';
+  ">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --mor: #4b0082; --mor-koyu: #2E0854; --altin: #d4af37;
+      --zemin: #151120; --kart: rgba(30, 24, 45, 0.85);
+      --metin: #f3effa; --soluk: #a89ebc; --kenar: rgba(212, 175, 55, 0.18);
+      --yesil: #2e7d32; --kirmizi: #c62828;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      font-family: 'Inter', system-ui, sans-serif;
+      background: radial-gradient(circle at 20% 0%, #2a1f47 0%, var(--zemin) 55%);
+      color: var(--metin);
+      display: flex; align-items: center; justify-content: center;
+      padding: 1.25rem;
+    }
+    .kap { width: 100%; max-width: 520px; }
+    .marka { text-align: center; margin-bottom: 1.5rem; }
+    .marka img { width: 56px; height: 56px; }
+    .marka h1 {
+      font-family: 'Outfit', sans-serif; font-size: 1.15rem; font-weight: 700;
+      margin-top: 0.6rem; color: var(--altin);
+    }
+    .marka p { font-size: 0.82rem; color: var(--soluk); margin-top: 0.2rem; }
+
+    .kart {
+      background: var(--kart); border: 1px solid var(--kenar);
+      border-radius: 20px; padding: 1.75rem;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+    }
+    .durum { text-align: center; margin-bottom: 1.25rem; }
+    .durum-ikon { font-size: 2.75rem; display: block; line-height: 1; }
+    .durum-baslik { font-family: 'Outfit', sans-serif; font-size: 1.3rem; font-weight: 700; margin-top: 0.6rem; }
+    .durum-aciklama { font-size: 0.85rem; color: var(--soluk); margin-top: 0.35rem; }
+    .gecerli .durum-baslik { color: #7bd88f; }
+    .gecersiz .durum-baslik { color: #ff8a80; }
+
+    .satirlar { border-top: 1px solid var(--kenar); padding-top: 1rem; }
+    .satir { display: flex; justify-content: space-between; gap: 1rem; padding: 0.6rem 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+    .satir:last-child { border-bottom: none; }
+    .satir dt { font-size: 0.78rem; color: var(--soluk); flex: 0 0 auto; }
+    .satir dd { font-size: 0.9rem; font-weight: 600; text-align: right; word-break: break-word; }
+    .kod { font-family: ui-monospace, Menlo, monospace; font-size: 0.72rem; color: var(--soluk); }
+
+    .form { display: flex; gap: 0.5rem; margin-top: 1.25rem; }
+    .form input {
+      flex: 1 1 auto; min-width: 0; padding: 0.75rem 0.9rem;
+      border-radius: 10px; border: 1px solid var(--kenar);
+      background: rgba(255,255,255,0.03); color: var(--metin); font-size: 0.9rem;
+    }
+    .form button {
+      flex: 0 0 auto; padding: 0.75rem 1.1rem; border: none; border-radius: 10px;
+      background: linear-gradient(135deg, var(--mor), #7b3fb8); color: #fff;
+      font-weight: 700; font-size: 0.9rem; cursor: pointer;
+    }
+    .yukleniyor { text-align: center; color: var(--soluk); padding: 1.5rem 0; }
+    .dipnot { text-align: center; font-size: 0.72rem; color: var(--soluk); margin-top: 1.25rem; line-height: 1.6; }
+  </style>
+</head>
+<body>
+  <main class="kap">
+    <div class="marka">
+      <img src="favicon.svg" alt="Edirne Olgunlaşma Enstitüsü">
+      <h1>Katılım Belgesi Doğrulama</h1>
+      <p>T.C. Millî Eğitim Bakanlığı · Edirne Olgunlaşma Enstitüsü</p>
+    </div>
+
+    <section class="kart" id="sonuc-kart">
+      <div class="yukleniyor" id="yukleniyor">Belge sorgulanıyor...</div>
+      <div id="sonuc" hidden></div>
+
+      <form class="form" id="kod-form">
+        <input type="text" id="kod-girdi" placeholder="Doğrulama kodunu yapıştırın" autocomplete="off" spellcheck="false">
+        <button type="submit">Sorgula</button>
+      </form>
+    </section>
+
+    <p class="dipnot">
+      Bu sayfa yalnızca belgenin gerçekliğini teyit eder.<br>
+      Sorgu kaydı tutulmaz; belgede yazan bilgiler dışında veri gösterilmez.
+    </p>
+  </main>
+
+  <script src="public-config.js"></script>
+  <script src="dogrula.js"></script>
+</body>
+</html>
