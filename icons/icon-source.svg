@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFE082" />
+      <stop offset="50%" stop-color="#D4AF37" />
+      <stop offset="100%" stop-color="#B38F24" />
+    </linearGradient>
+    <linearGradient id="purpleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6A1B9A" />
+      <stop offset="100%" stop-color="#2E0854" />
+    </linearGradient>
+  </defs>
+  <!-- Tam kaplayan zemin: Android "maskable" ikonlarda kenarlar kırpılabildiği
+       için logo, güvenli alan olan orta %60'lık bölgede tutulur. -->
+  <rect width="512" height="512" fill="url(#purpleGrad)" />
+  <g transform="translate(102.4 102.4) scale(3.072)">
+    <path d="M32 35 H58 M32 50 H52 M32 65 H58 M32 30 V70"
+          stroke="url(#goldGrad)" stroke-width="8" stroke-linecap="round"
+          stroke-linejoin="round" fill="none" />
+    <circle cx="64" cy="50" r="15" stroke="url(#goldGrad)" stroke-width="8" fill="none" />
+  </g>
+</svg>
